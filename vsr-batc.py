@@ -62,13 +62,15 @@ if args.playback_emulation:
     
 if args.include_user_initiated:
     include_user_initiated = True
+    
+log_path = args.log_path
 
 while True:
     time.sleep(0.5)
     
     # Read player.log file
     lines = []
-    with open('player.log', 'r') as file:
+    with open(log_path, 'r') as file:
         lines = file.readlines()
         
     # If we are in playback emulation mode, only read the first playback_emulation_idx lines, and increment
