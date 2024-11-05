@@ -104,7 +104,7 @@ while True:
     if source == "User" and not include_user_initiated:
         continue
     
-    # Try to determine the user's callsign, by finding the first line that contains the a comma, followed by a name that ends in Radar, Tower, Ground, Center, Centre, Approach, Departure, Control, Delivery, Clearance, or Director
+    # Try to determine the user's callsign, by finding the first line that contains the a comma, followed by a name that ends in an ATC control identifier
     user_callsign = "User"
     atc_callsign = "ATC"
     for line in reversed(lines):
@@ -112,7 +112,7 @@ while True:
             rest_of_line = line.split(",")[1]
             if rest_of_line.startswith(" contact"):
                 continue
-            if any(x in rest_of_line for x in ["Radar", "Tower", "Ground", "Center", "Centre", "Approach", "Departure", "Control", "Delivery", "Clearance", "Director"]):
+            if any(x in rest_of_line for x in ["Radar", "Tower", "Ground", "Center", "Centre", "Approach", "Departure", "Control", "Delivery", "Clearance", "Director", "Info", "Information", "Ramp", "Apron"]):
                 user_callsign = line.split(",")[0]
                 atc_callsign = line.split(",")[1].split(",")[0]                
                 break
