@@ -11,6 +11,25 @@ import uuid
 # originating user id isn't used for this, but is mandatory (for instance its your VATSIM CID), you can user anything (maybe a UUID) - 
 # then the message is in the text field. Avoid HTML to start with, frequencies get formatted automatically as links
 
+atc_identifiers = [
+    "Approach",
+    "Apron",
+    "Center",
+    "Centre",
+    "Clearance",
+    "Control",
+    "Delivery",
+    "Departure",
+    "Director",
+    "Ground",
+    "Info",
+    "Information",
+    "Radar",
+    "Radio",
+    "Ramp",
+    "Tower"
+]
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 url = 'http://localhost:1228/incoming_message'
@@ -112,7 +131,7 @@ while True:
             rest_of_line = line.split(",")[1]
             if rest_of_line.startswith(" contact"):
                 continue
-            if any(x in rest_of_line for x in ["Radar", "Tower", "Ground", "Center", "Centre", "Approach", "Departure", "Control", "Delivery", "Clearance", "Director", "Info", "Information", "Ramp", "Apron"]):
+            if any(x in rest_of_line for x in atc_identifiers):
                 user_callsign = line.split(",")[0]
                 atc_callsign = line.split(",")[1].split(",")[0]                
                 break
