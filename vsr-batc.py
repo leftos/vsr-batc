@@ -76,10 +76,12 @@ while True:
     # If we are in playback emulation mode, only read the first playback_emulation_idx lines, and increment
     if playback_emulation:
         if playback_emulation_idx > len(lines):
-            break
-        lines = lines[:playback_emulation_idx]
-        playback_emulation_idx += 1
-        print(f"Playback Emulation: {playback_emulation_idx}")
+            playback_emulation = False
+            print("Playback emulation complete, resuming normal operation")
+        else:
+            lines = lines[:playback_emulation_idx]
+            playback_emulation_idx += 1
+            print(f"Playback Emulation: {playback_emulation_idx}")
         
     cur_atc_line = None
     source = None
