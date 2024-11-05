@@ -26,7 +26,8 @@ json_data = """
     },
     "Metadata": {
         "OriginatingNetwork": "BATC",
-        "OriginatingNetworkUserIdentifier": ""
+        "OriginatingNetworkUserIdentifier": "",
+        "MessageClass": 22
     },
     "MessageContent": {
         "Text": ""
