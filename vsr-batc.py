@@ -24,6 +24,7 @@ atc_identifiers = [
     "Ground",
     "Info",
     "Information",
+    "Oceanic",
     "Radar",
     "Radio",
     "Ramp",
@@ -62,7 +63,7 @@ json_data["Metadata"]["OriginatingNetworkUserIdentifier"] = str(uuid)
 last_atc_line = ""
 
 playback_emulation = False
-playback_emulation_idx = 330
+last_line_index = -1
 
 include_user_initiated = False
 
@@ -84,6 +85,9 @@ if args.include_user_initiated:
     
 log_path = args.log_path
 
+user_callsign = "User"
+atc_callsign = "ATC"
+
 while True:
     time.sleep(0.5)
     
@@ -92,27 +96,36 @@ while True:
     with open(log_path, 'r') as file:
         lines = file.readlines()
         
-    # If we are in playback emulation mode, only read the first playback_emulation_idx lines, and increment
-    if playback_emulation:
-        if playback_emulation_idx > len(lines):
-            playback_emulation = False
-            print("Playback emulation complete, resuming normal operation")
-        else:
-            lines = lines[:playback_emulation_idx]
-            playback_emulation_idx += 1
-            print(f"Playback Emulation: {playback_emulation_idx}")
+    if not playback_emulation and last_line_index == -1:
+        last_line_index = len(lines)-1
+    
+    if last_line_index >= len(lines):
+        last_line_index = len(lines)-1
+        
+    if last_line_index == len(lines)-1:
+        continue
         
     cur_atc_line = None
     source = None
-    # Scan the lines from the bottom for the last line that starts with [lat: and then capture the line after that in the buffer into cur_atc_line
-    for line in reversed(lines):
+    
+    lines = list(lines[last_line_index+1:])
+    for index, line in enumerate(lines):
+        if index == len(lines)-1:
+            break
         if line.startswith("[lat:"):
-            source = "ATC"
-            break
-        if line.startswith("Speech Transcription Raw:"):
+            # This assumes the Voice Key is only logged for co-pilot responses            
+            if len(lines) > index+2 and lines[index+2].startswith("Voice Key:"):
+                source = "User"
+                last_line_index += index+2
+            else:
+                source = "ATC"
+                last_line_index += index+1
+        elif line.startswith("Speech Transcription Raw:"):
             source = "User"
+            last_line_index += index+1
+        cur_atc_line = lines[index+1]
+        if source:
             break
-        cur_atc_line = line
     
     if not source:
         continue
@@ -124,13 +137,22 @@ while True:
         continue
     
     # Try to determine the user's callsign, by finding the first line that contains the a comma, followed by a name that ends in an ATC control identifier
-    user_callsign = "User"
-    atc_callsign = "ATC"
     for line in reversed(lines):
         if "," in line:
+            first_part = line.split(",")[0]
             rest_of_line = line.split(",")[1]
+            
+            if rest_of_line.startswith("Contact"):
+                continue
+            
+            if any(first_part.endswith(x) for x in atc_identifiers):
+                atc_callsign = first_part
+                user_callsign = rest_of_line.split(",")[0]
+                break
+            
             if rest_of_line.startswith(" contact"):
                 continue
+            
             if any(x in rest_of_line for x in atc_identifiers):
                 user_callsign = line.split(",")[0]
                 atc_callsign = line.split(",")[1].split(",")[0]                
