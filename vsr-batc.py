@@ -140,20 +140,20 @@ while True:
     for line in reversed(lines):
         if "," in line:
             first_part = line.split(",")[0]
-            rest_of_line = line.split(",")[1]
+            second_part = line.split(",")[1].split(",")[0]
             
-            if rest_of_line.startswith("Contact"):
+            if first_part.startswith("Contact"):
                 continue
             
             if any(first_part.endswith(x) for x in atc_identifiers):
                 atc_callsign = first_part
-                user_callsign = rest_of_line.split(",")[0]
+                user_callsign = second_part.split(",")[0]
                 break
             
-            if rest_of_line.startswith(" contact"):
+            if second_part.startswith(" contact"):
                 continue
             
-            if any(x in rest_of_line for x in atc_identifiers):
+            if any(second_part.endswith(x) for x in atc_identifiers):
                 user_callsign = line.split(",")[0]
                 atc_callsign = line.split(",")[1].split(",")[0]                
                 break
