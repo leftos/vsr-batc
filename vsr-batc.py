@@ -136,8 +136,11 @@ while True:
     if source == "User" and not include_user_initiated:
         continue
     
-    # Try to determine the user's callsign, by finding the first line that contains the a comma, followed by a name that ends in an ATC control identifier
+    # Try to determine the user's callsign, by finding the first line that contains the a comma, followed by a name that ends in an ATC control identifier,
+    # and vice-versa
     for line in reversed(lines):
+        if "ATIS" in line or "METAR" in line:
+            continue
         if "," in line:
             first_part = line.split(",")[0]
             second_part = line.split(",")[1].split(",")[0]
@@ -146,16 +149,18 @@ while True:
                 continue
             
             if any(first_part.endswith(x) for x in atc_identifiers):
-                atc_callsign = first_part
-                user_callsign = second_part.split(",")[0]
+                if second_part.split(' ')[-1].isnumeric():
+                    atc_callsign = first_part
+                    user_callsign = second_part
                 break
             
             if second_part.startswith(" contact"):
                 continue
             
             if any(second_part.endswith(x) for x in atc_identifiers):
-                user_callsign = line.split(",")[0]
-                atc_callsign = line.split(",")[1].split(",")[0]                
+                if first_part.split(' ')[-1].isnumeric():
+                    user_callsign = first_part
+                    atc_callsign = second_part
                 break
     
     # If the last ATC line is different from the current ATC line, send a message
@@ -169,7 +174,7 @@ while True:
             json_data["Headers"]["To"] = atc_callsign
             json_data["Headers"]["From"] = user_callsign
             cur_atc_line = cur_atc_line.replace("Speech Transcription Processed: ", "")
-            # Surround the cur_atc_line in an HTML color tag with a light purple color
+            # Surround the cur_atc_line in an HTML color tag with a light purple color to discern user initiated messages
             cur_atc_line = f"<font color='#D8BFD8'>{cur_atc_line}</font>"
         
         json_data["MessageContent"]["Text"] = cur_atc_line
