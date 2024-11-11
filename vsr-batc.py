@@ -88,10 +88,21 @@ log_path = args.log_path
 user_callsign = "User"
 atc_callsign = "ATC"
 
+print("VSR BATC Integration")
+print("GitHub: https://github.com/leftos/vsr-batc")
+print("Discord: https://discord.gg/UdHpHzxCNr")
+print("=====================================")
+print("You can minimize this window, but do not close it.")
+print("This integration will run in the background without need for interaction from you.")
+print("Make sure the ATC App Messages filter is enabled in VSR's settings.")
+print("=====================================")
+
 while True:
     time.sleep(0.5)
     
     # Read player.log file
+    if not os.path.exists(log_path):
+        continue    
     lines = []
     with open(log_path, 'r') as file:
         lines = file.readlines()
@@ -165,6 +176,9 @@ while True:
     
     # If the last ATC line is different from the current ATC line, send a message
     if last_atc_line != cur_atc_line:
+        print()
+        print(f"Sending new line: {cur_atc_line}")
+        
         last_atc_line = cur_atc_line
         
         if source == "ATC":
@@ -183,5 +197,9 @@ while True:
         response = requests.post(url, json=json_data)
 
         # Output the response status code and content
-        print(f"Status Code: {response.status_code}")
-        print(f"Response Content: {response.text}")
+        if response.status_code != 200:
+            print("Failed to send message to VSR")
+            print(f"Status Code: {response.status_code}")
+            print(f"Response Content: {response.text}")
+        else:
+            print("Message sent to VSR successfully")
