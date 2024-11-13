@@ -5,6 +5,8 @@ import requests
 import time
 import uuid
 
+version = "1.2.5"
+
 # To: isn't used but needs to be set, you can use the user's callsign if you have it, 
 # From is typically the aircraft's or ATC callsign (important for BATC messages).  
 # Originating ID is important as it tells user where it came from (BATC for example) - so it displays in UI as FROM@NETWORK - the example json is shown in the VSR screenshot. 
@@ -94,13 +96,19 @@ log_path = args.log_path
 user_callsign = "User"
 atc_callsign = "ATC"
 
-print("VSR BATC Integration")
+print(f"VSR BATC Integration v{version}")
 print("GitHub: https://github.com/leftos/vsr-batc")
 print("Discord: https://discord.gg/UdHpHzxCNr")
 print("=====================================")
 print("You can minimize this window, but do not close it.")
 print("This integration will run in the background without need for interaction from you.")
 print("Make sure the ATC App Messages filter is enabled in VSR's settings.")
+print("=====================================")
+print("Options:")
+print(f"Playback Emulation: {playback_emulation}")
+print(f"Include User Initiated: {include_user_initiated}")
+print(f"Log Path: {log_path}")
+print(f"Less Compact: {less_compact}")
 print("=====================================")
 
 def is_likely_callsign(string):
