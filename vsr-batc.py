@@ -6,7 +6,7 @@ import requests
 import time
 import uuid
 
-version = "0.2.5"
+version = "0.2.6"
 
 # To: isn't used but needs to be set, you can use the user's callsign if you have it, 
 # From is typically the aircraft's or ATC callsign (important for BATC messages).  
