@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import re
 import requests
 import time
 import uuid
@@ -113,11 +114,24 @@ print("=====================================")
 
 def is_likely_callsign(string):
     # if the string is at least 2 words long and the last word is a number, it's likely a callsign
-    if (len(string.split(' ')) >= 2 and string.split(' ')[-1].isnumeric()):
-        return True
+    if (len(string.split(' ')) >= 2):
+        last_callsign_part = string.split(' ')[-1]
+        if last_callsign_part.isnumeric():
+            return True
+        # if the last callsign part matches the regex [0-9]+[A-Z]+ and it's a total length of 3 characters, then it's likely a european callsign
+        if len(last_callsign_part) == 3 and re.match(r'[0-9]+[A-Z]+', last_callsign_part):
+            return True
     # if the string is 5 to 6 characters, all caps, optionally with a dash somewhere in the middle, it's likely a callsign
     if len(string) >= 5 and len(string) <= 6 and string.isupper() and (string.count('-') == 0 or string.count('-') == 1):
         return True
+    return False
+    
+# Callsign tests
+assert(is_likely_callsign("N12345"))
+assert(is_likely_callsign("N123RK"))
+assert(is_likely_callsign("United 2678"))
+assert(is_likely_callsign("Speedbird 9AJ"))
+assert(not is_likely_callsign("New York"))
 
 while True:
     time.sleep(0.5)
