@@ -131,6 +131,7 @@ assert(is_likely_callsign("N12345"))
 assert(is_likely_callsign("N123RK"))
 assert(is_likely_callsign("United 2678"))
 assert(is_likely_callsign("Speedbird 9AJ"))
+assert(is_likely_callsign("EasyJet 89AJ"))
 assert(not is_likely_callsign("New York"))
 assert(not is_likely_callsign("N**523"))
 
