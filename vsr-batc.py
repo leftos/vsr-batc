@@ -122,7 +122,7 @@ def is_likely_callsign(string):
         if len(last_callsign_part) == 3 and re.match(r'[0-9]+[A-Z]+', last_callsign_part):
             return True
     # if the string is 5 to 6 characters, all caps, optionally with a dash somewhere in the middle, it's likely a callsign
-    if len(string) >= 5 and len(string) <= 6 and string.isupper() and (string.count('-') == 0 or string.count('-') == 1):
+    if len(string) >= 5 and len(string) <= 6 and string.isupper() and string.isalnum() and (string.count('-') == 0 or string.count('-') == 1):
         return True
     return False
     
@@ -132,6 +132,7 @@ assert(is_likely_callsign("N123RK"))
 assert(is_likely_callsign("United 2678"))
 assert(is_likely_callsign("Speedbird 9AJ"))
 assert(not is_likely_callsign("New York"))
+assert(not is_likely_callsign("N**523"))
 
 while True:
     time.sleep(0.5)
