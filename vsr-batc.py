@@ -6,7 +6,7 @@ import requests
 import time
 import uuid
 
-version = "0.2.7"
+version = "0.2.8"
 
 # To: isn't used but needs to be set, you can use the user's callsign if you have it, 
 # From is typically the aircraft's or ATC callsign (important for BATC messages).  
@@ -116,6 +116,8 @@ def is_likely_callsign(string):
     # if the string is at least 2 words long and the last word is a number, it's likely a callsign
     if (len(string.split(' ')) >= 2):
         last_callsign_part = string.split(' ')[-1]
+        if last_callsign_part == "Heavy" or last_callsign_part == "Super":
+            return True
         if last_callsign_part.isnumeric():
             return True
         # if the last callsign part matches the regex [0-9]+[A-Z]+ and it's a length of 3-4 characters, then it's likely a european callsign
