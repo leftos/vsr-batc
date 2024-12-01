@@ -3,4 +3,5 @@
 
 Announcements / Discussion / Support: https://discord.gg/UdHpHzxCNr \
 VSR: https://github.com/daveblackuk/VSR \
+This integration requires the VSR alpha version available here: https://alpha.vsrsoftware.com \
 BeyondATC: https://www.beyondatc.net
