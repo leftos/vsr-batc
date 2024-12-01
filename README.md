@@ -3,4 +3,4 @@
 
 Announcements / Discussion / Support: https://discord.gg/UdHpHzxCNr \
 VSR: https://github.com/daveblackuk/VSR \
-BeyondATC: https://www.beyondatc.net/
+BeyondATC: https://www.beyondatc.net
